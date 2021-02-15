@@ -19255,7 +19255,7 @@ process.umask = function() { return 0; };
 /***/ (function(module) {
 
 /*!
-* sweetalert2 v10.14.1
+* sweetalert2 v10.15.0
 * Released under the MIT License.
 */
 (function (global, factory) {
@@ -20399,16 +20399,17 @@ process.umask = function() { return 0; };
   };
 
   var renderContent = function renderContent(instance, params) {
-    var content = getContent().querySelector("#".concat(swalClasses.content)); // Content as HTML
+    var htmlContainer = getHtmlContainer();
+    applyCustomClass(htmlContainer, params, 'htmlContainer'); // Content as HTML
 
     if (params.html) {
-      parseHtmlToContainer(params.html, content);
-      show(content, 'block'); // Content as plain text
+      parseHtmlToContainer(params.html, htmlContainer);
+      show(htmlContainer, 'block'); // Content as plain text
     } else if (params.text) {
-      content.textContent = params.text;
-      show(content, 'block'); // No content
+      htmlContainer.textContent = params.text;
+      show(htmlContainer, 'block'); // No content
     } else {
-      hide(content);
+      hide(htmlContainer);
     }
 
     renderInput(instance, params); // Custom class
@@ -22882,7 +22883,7 @@ process.umask = function() { return 0; };
     };
   });
   SweetAlert.DismissReason = DismissReason;
-  SweetAlert.version = '10.14.1';
+  SweetAlert.version = '10.15.0';
 
   var Swal = SweetAlert;
   Swal["default"] = Swal;

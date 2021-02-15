@@ -1,4 +1,4 @@
-<h1>Listado de tabla</h1>
+<h1 class="text-center">Listado Post</h1>
 <div class="container">
 
     <table class="table table-striped table-dark">
