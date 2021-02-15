@@ -1,4 +1,4 @@
 @extends('layout')
 @section('content')
-    <h1>Hola, Livewire</h1>
+   @livewire('post-component') 
 @endsection
