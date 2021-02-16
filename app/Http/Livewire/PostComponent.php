@@ -10,18 +10,46 @@ use App\Models\Post;
 class PostComponent extends Component
 {
     use WithPagination;
-    protected $paginationTheme = 'bootstrap';
+    public $exportable = true;
 
+    protected $paginationTheme = 'bootstrap';
     public $view = 'create';
     public $title,$body,$post_id;
+    public $search;
+
+    public $sorBy='id';
+    public $ordenar = 'desc';
+
+    protected $queryString = ['search'];
+   
 
     public function render()
     {
         
+        $consulta = Post::query()
+        ->orderBy($this->sorBy, $this->ordenar)
+        ->where('title', 'like', '%'.$this->search.'%')
+        ->paginate(15);
+
         return view('livewire.post-component', [
-            'posts' => Post::orderBy('id','desc')->paginate(8),
+            //'posts' => Post::where('title', 'like', '%'.$this->search.'%')->paginate(15),
+            //'posts' => Post::orderBy('id','desc')->paginate(8),
             //    'posts' => Post::table('id','body','title')->paginate(15)
+            //'posts' => Post::where('title', 'like', '%'.$this->search.'%')->get(),
+            'posts' => $consulta
         ]);
+    }
+
+    //ordenar consulta
+    public  function sorBy($atributo){
+
+        if($this->ordenar == 'asc'){
+            $this->ordenar = 'desc';
+        }else{
+                $this->ordenar = 'asc';
+            
+        }
+        return $this->sorBy= $atributo;
     }
 
  
@@ -69,7 +97,7 @@ class PostComponent extends Component
        $this->view='create';
  
      }
-     
+
 
      public  function update(){
         $this->validate([
@@ -95,7 +123,7 @@ class PostComponent extends Component
     public  function destroy($id){
         Post::destroy($id);
         $this->dispatchBrowserEvent('alert',
-        ['type' => 'info',  'message' => 'Eliminado con Exito! 😥']);
+        ['type' => 'info',  'message' => 'Eliminado con Exito!  🌝']);
     }
 
 

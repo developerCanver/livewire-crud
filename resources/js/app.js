@@ -1,3 +1,6 @@
 require('./bootstrap');
 
-window.Swal = require('sweetalert2');
+//mensasje de alerta sweealert
+import swal from 'sweetalert2';
+window.Swal = Swal;
+

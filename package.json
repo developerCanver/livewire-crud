@@ -17,6 +17,8 @@
         "postcss": "^8.1.14"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.2",
+        "font-awesome": "^4.7.0",
         "sweetalert2": "^10.15.0"
     }
 }
