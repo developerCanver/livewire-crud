@@ -15,29 +15,35 @@ class PostComponent extends Component
     protected $paginationTheme = 'bootstrap';
     public $view = 'create';
     public $title,$body,$post_id;
-    public $search;
+    public $search='';
 
     public $sorBy='id';
     public $ordenar = 'desc';
 
+    public $paginacion='';
+    public $eliminarselect =[];
+    public $contadorSelect;
+  
+
     protected $queryString = ['search'];
-   
+    
 
     public function render()
     {
         
-        $consulta = Post::query()
-        ->orderBy($this->sorBy, $this->ordenar)
-        ->where('title', 'like', '%'.$this->search.'%')
-        ->paginate(15);
+        $consulta = Post::search($this->search)        
+        ->orderBy($this->sorBy, $this->ordenar)        
+        ->paginate($this->paginacion);
 
         return view('livewire.post-component', [
-            //'posts' => Post::where('title', 'like', '%'.$this->search.'%')->paginate(15),
-            //'posts' => Post::orderBy('id','desc')->paginate(8),
-            //    'posts' => Post::table('id','body','title')->paginate(15)
-            //'posts' => Post::where('title', 'like', '%'.$this->search.'%')->get(),
+        
             'posts' => $consulta
         ]);
+    }
+
+    //resetear paginacion
+    public function updatingSearch(){
+        $this->resetPage();
     }
 
     //ordenar consulta
@@ -56,74 +62,94 @@ class PostComponent extends Component
 
   //Guardar
     public  function store(){
-        $this->validate([
-            'title' => 'required',
-            'body' => 'required'
-        ]);
+            $this->validate([
+                'title' => 'required',
+                'body' => 'required'
+            ]);
+        $post= Post::create([
+                'title' => $this->title,
+                'body' => $this->body,
 
-       $post= Post::create([
-            'title' => $this->title,
-            'body' => $this->body,
+         ]);        
+            //mensak¿je de alerta 
+            $this->dispatchBrowserEvent('alert', 
+            ['type' => 'success',  'message' => ''.$this->title.', fue Guardado con Exito! 🌝']);
 
-        ]);
-      
-        //mensak¿je de alerta 
-        $this->dispatchBrowserEvent('alert', 
-                ['type' => 'success',  'message' => ''.$this->title.', fue Guardado con Exito! 🌝']);
-
-       $this->edit($post->id);
-        
+        $this->edit($post->id);        
     }
 
 
 
     public  function edit($id){
-       $post= Post::find($id);
-    
-        $this->post_id=$id; //capturo id para enviarlo actualizar registor
-        $this->title=$post->title;
-        $this->body=$post->body;
-     //cmabias la vista por lavariable insertada
-     $this->view='edit';
+            $post= Post::find($id);
+        
+            $this->post_id=$id; //capturo id para enviarlo actualizar registor
+            $this->title=$post->title;
+            $this->body=$post->body;
+            //cmabias la vista por lavariable insertada
+            $this->view='edit';
 
     }
 
 
-    public  function default(){
-       $this->title="";
-       $this->body="";
 
-       //cambia la vista a guardar
-       $this->view='create';
+    public  function default(){
+            $this->title="";
+            $this->body="";
+
+            //cambia la vista a guardar
+            $this->view='create';
  
      }
 
 
+
      public  function update(){
-        $this->validate([
-            'title' => 'required',
-            'body' => 'required'
-        ]);
+            $this->validate([
+                'title' => 'required',
+                'body' => 'required'
+            ]);
 
-        $post= Post::find($this->post_id);
+            $post= Post::find($this->post_id);
 
-        $post->update([
-            'title' => $this->title,
-            'body' => $this->body,
+            $post->update([
+                'title' => $this->title,
+                'body' => $this->body,
 
-        ]);
+            ]);
 
-        $this->dispatchBrowserEvent('alert',
-        ['type' => 'success',  'message' => ''.$this->title.', fue actualizado con Exito! 🌝']);
-        $this->default();
+            $this->dispatchBrowserEvent('alert',
+            ['type' => 'success',  'message' => ''.$this->title.', fue actualizado con Exito! 🌝']);
+            $this->default();
     }
 
     
 //Eliminar
     public  function destroy($id){
-        Post::destroy($id);
+            Post::destroy($id);
+            $this->dispatchBrowserEvent('alert',
+            ['type' => 'info',  'message' => 'Eliminado con Exito!  🌝']);
+    }
+
+
+    //contar selecionados
+    public function contSelect(){            
+            $this->contadorSelect=$this->contadorSelect+1;          
+        
+    }
+    public function desSelect(){            
+        $this->contadorSelect=$this->contadorSelect-1;         
+    
+}
+
+    //eliminar registros selecionados
+    public function destroyselect(){
+        Post::destroy($this->eliminarselect);
+        $this->contadorSelect=0;
+
         $this->dispatchBrowserEvent('alert',
-        ['type' => 'info',  'message' => 'Eliminado con Exito!  🌝']);
+        ['type' => 'info',  'message' => 'Eliminados con Exito!  🌝']);
+        //dd($this->eliminarselect);
     }
 
 

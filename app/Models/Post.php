@@ -13,4 +13,11 @@ class Post extends Model
         'title',
         'body'
     ];
+    //bubsqueda por id title y bodt
+    public static function search($search){
+        return empty($search) ? static::query()
+        :static::where('id','like', '%'.$search.'%')
+        ->orwhere('title','like', '%'.$search.'%')
+        ->orwhere('body','like', '%'.$search.'%');
+    }
 }
