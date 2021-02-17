@@ -133,14 +133,11 @@ class PostComponent extends Component
 
 
     //contar selecionados
-    public function contSelect(){            
-            $this->contadorSelect=$this->contadorSelect+1;          
+    public function contSelect($count){            
+            $this->contadorSelect=$count;          
         
     }
-    public function desSelect(){            
-        $this->contadorSelect=$this->contadorSelect-1;         
-    
-}
+ 
 
     //eliminar registros selecionados
     public function destroyselect(){

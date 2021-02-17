@@ -29,7 +29,7 @@
             @foreach ($posts as $post)
             <tr>
                 <td class="border px-4 py-2">
-                    <input type="checkbox" wire:model="eliminarselect" onclick="myFunction()" id="myCheck" value="{{$post->id}}">
+                    <input type="checkbox" wire:model="eliminarselect" onclick="myFunction()" name="chk" id="myCheck" value="{{$post->id}}">
                 </td>
                 <td>{{$post->id}}</td>
                 <td>{{$post->title}}</td>
@@ -91,21 +91,24 @@ function MuestraAlert(id){
             }
         })
     }
-
-       </script>
+</script>
 
 <script>
 
     function myFunction() {
-        var check="0";
 
-    var checkBox = document.getElementById("myCheck");
-        if (checkBox.checked == true){
-            @this.contSelect();
-            console.log("si");
-            } else {
-                @this.desSelect();
-                console.log("no");
-            }
+    //contador de checbox
+    var a = document.getElementsByName('chk');
+    var newvar =0;
+    var count;
+    for (let count = 0; count < a.length; count++) {
+        if(a[count].checked==true){
+            newvar = newvar +1;
+            
+           // console.log(a[count].checked);
+        }  
+    }
+    //console.log(newvar)
+    @this.contSelect(newvar);
     }
 </script>
